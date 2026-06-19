@@ -1,15 +1,13 @@
 package me.rerere.rikkahub.di
 
-import com.google.firebase.Firebase
-import com.google.firebase.analytics.analytics
-import com.google.firebase.crashlytics.crashlytics
-import com.google.firebase.remoteconfig.remoteConfig
 import kotlinx.serialization.json.Json
 import me.rerere.highlight.Highlighter
 import me.rerere.rikkahub.AppScope
+import me.rerere.rikkahub.data.ai.AILoggingManager
 import me.rerere.rikkahub.data.ai.tools.LocalTools
 import me.rerere.rikkahub.data.event.AppEventBus
 import me.rerere.rikkahub.service.ChatService
+import me.rerere.rikkahub.utils.AppAnalytics
 import me.rerere.rikkahub.utils.EmojiData
 import me.rerere.rikkahub.utils.EmojiUtils
 import me.rerere.rikkahub.utils.JsonInstant
@@ -51,19 +49,15 @@ val appModule = module {
     }
 
     single {
-        Firebase.crashlytics
-    }
-
-    single {
-        Firebase.remoteConfig
-    }
-
-    single {
-        Firebase.analytics
+        AppAnalytics()
     }
 
     single {
         SoundEffectPlayer(get())
+    }
+
+    single {
+        AILoggingManager()
     }
 
     single {

@@ -354,10 +354,6 @@ class ChatCompletionsAPI(
                         }
                     }
 
-                    "aiping.cn" -> {
-                        put("enable_thinking", level.isEnabled)
-                    }
-
                     "open.bigmodel.cn" -> {
                         put("thinking", buildJsonObject {
                             put("type", if (!level.isEnabled) "disabled" else "enabled")

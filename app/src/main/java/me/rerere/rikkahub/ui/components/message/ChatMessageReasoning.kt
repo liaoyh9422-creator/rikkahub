@@ -127,7 +127,6 @@ private fun ReasoningContent(
     expandState: ReasoningCardState,
     scrollState: ScrollState,
     fadeHeight: Float,
-    loading: Boolean,
 ) {
     val isPreview = expandState == ReasoningCardState.Preview
     val reasoningTextStyle = MaterialTheme.typography.bodySmall.copy(
@@ -167,7 +166,7 @@ private fun ReasoningContent(
                 }
             }
     ) {
-        val reasoningContent = @Composable {
+        SelectionContainer {
             MarkdownBlock(
                 content = reasoning.reasoning.replaceRegexes(
                     assistant = assistant,
@@ -177,15 +176,6 @@ private fun ReasoningContent(
                 style = reasoningTextStyle,
                 modifier = Modifier.fillMaxSize(),
             )
-        }
-        // 流式生成期间不启用 SelectionContainer，避免 selectable 列表并发修改导致的
-        // ConcurrentModificationException（详见 ChatMessage.kt 文本块同样处理）。
-        if (loading) {
-            reasoningContent()
-        } else {
-            SelectionContainer {
-                reasoningContent()
-            }
         }
     }
 }
@@ -248,7 +238,6 @@ fun ChainOfThoughtScope.ChatMessageReasoningStep(
                 expandState = state.expandState,
                 scrollState = state.scrollState,
                 fadeHeight = fadeHeight,
-                loading = loading,
             )
         },
     )
