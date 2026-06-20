@@ -3,9 +3,11 @@ name: Build arm64-v8a Release APK
 on:
   workflow_dispatch:
   push:
-    branches:
-      - master
-      - main
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
 
 jobs:
   build-arm64-release:
@@ -103,3 +105,15 @@ jobs:
           name: rikkahub-arm64-v8a-release-apk
           path: app/build/outputs/apk/release/*arm64-v8a*release*.apk
           if-no-files-found: error
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_type == 'tag' && github.ref_name || format('manual-{0}', github.run_number) }}
+          name: ${{ github.ref_type == 'tag' && github.ref_name || format('Manual build #{0}', github.run_number) }}
+          target_commitish: ${{ github.sha }}
+          files: app/build/outputs/apk/release/*arm64-v8a*release*.apk
+          fail_on_unmatched_files: true
+          make_latest: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
